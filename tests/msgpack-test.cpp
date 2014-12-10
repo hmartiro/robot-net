@@ -9,7 +9,7 @@
 
 using namespace std;
 
-int main() {
+int main(int argc, char *argv[]) {
 
   // This is the target object.
   vector<string> target;
