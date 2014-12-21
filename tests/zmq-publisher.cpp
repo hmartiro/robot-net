@@ -15,7 +15,7 @@ int main(int argc, char *argv[]) {
 
   // Create a publisher socket
   zmqpp::context context;
-  zmqpp::socket_type type = zmqpp::socket_type::publish;
+  zmqpp::socket_type type = zmqpp::socket_type::pair;
   zmqpp::socket socket (context, type);
 
   // Open the connection
@@ -24,6 +24,9 @@ int main(int argc, char *argv[]) {
 
   // Pause to connect
   this_thread::sleep_for(chrono::milliseconds(1000));
+
+  // Number of messages sent
+  int count = 0;
 
   while(true) {
 
@@ -39,9 +42,12 @@ int main(int argc, char *argv[]) {
 
     // Send it off to any subscribers
     socket.send(message);
-    cout << "[SENT] at " << ms << ": " << text << endl;
+    count++;
 
-    this_thread::sleep_for(chrono::microseconds(1000));
+    if(count % 10000 == 0)
+      cout << "[SENT] #" << count << " at " << ms << ": " << text << endl;
+
+    //this_thread::sleep_for(chrono::microseconds(10));
   }
 
   // Unreachable, but for good measure

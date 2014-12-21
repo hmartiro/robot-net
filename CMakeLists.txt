@@ -29,15 +29,15 @@ set(SRC_ALL
 # ---------------------------------------------------------
 
 set(LIB_ZMQ zmq zmqpp)
+set(LIB_REDIS hiredis event)
 set(LIB_ALL ${LIB_ZMQ})
 
 # ---------------------------------------------------------
 # Main program?
 # ---------------------------------------------------------
 
-add_executable(robot_net ${SRC_RNET_ALL} main.cpp)
-
-target_link_libraries(robot_net ${LIB_ZMQ})
+add_executable(robot-net ${SRC_RNET_ALL} main.cpp)
+target_link_libraries(robot-net ${LIB_ZMQ})
 
 # ---------------------------------------------------------
 # ZeroMQ Tests
@@ -48,6 +48,28 @@ target_link_libraries(zmq-pub ${LIB_ZMQ})
 
 add_executable(zmq-sub tests/zmq-subscriber.cpp)
 target_link_libraries(zmq-sub ${LIB_ZMQ})
+
+# ---------------------------------------------------------
+# Redis Tests
+# ---------------------------------------------------------
+
+add_executable(redis-set tests/redis-setter.cpp)
+target_link_libraries(redis-set ${LIB_REDIS})
+
+add_executable(redis-get tests/redis-getter.cpp)
+target_link_libraries(redis-get ${LIB_REDIS})
+
+add_executable(redis-set-async tests/redis-setter-async.cpp)
+target_link_libraries(redis-set-async ${LIB_REDIS})
+
+add_executable(redis-get-async tests/redis-getter-async.cpp)
+target_link_libraries(redis-get-async ${LIB_REDIS})
+
+add_executable(redis-pub tests/redis-publisher.cpp)
+target_link_libraries(redis-pub ${LIB_REDIS})
+
+add_executable(redis-sub tests/redis-subscriber.cpp)
+target_link_libraries(redis-sub ${LIB_REDIS})
 
 # ---------------------------------------------------------
 # MessagePack Tests
