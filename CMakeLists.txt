@@ -78,6 +78,13 @@ target_link_libraries(redis-sub ${LIB_REDIS})
 add_executable(msgpack-test tests/msgpack-test.cpp)
 
 # ---------------------------------------------------------
+# Redis C++ Wrapper Tests
+# ---------------------------------------------------------
+
+add_executable(redis-cpp-test tests/redis-cpp-test.cpp src/redis.cpp)
+target_link_libraries(redis-cpp-test ${LIB_REDIS})
+
+# ---------------------------------------------------------
 # Node Tests
 # ---------------------------------------------------------
 

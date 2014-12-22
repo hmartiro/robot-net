@@ -23,6 +23,8 @@ public:
   */
   void start();
 
+  void publish(std::string msg);
+
 private:
 
   // One thread to handle each socket

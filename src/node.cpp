@@ -33,13 +33,15 @@ void Node::start() {
     vector<thread> threads;
     threads.emplace_back(thread([this] { launch_pub_thread(); }));
     threads.emplace_back(thread([this] { launch_sub_thread(); }));
-    threads.emplace_back(thread([this] { launch_req_thread(); }));
-    threads.emplace_back(thread([this] { launch_rep_thread(); }));
+//    threads.emplace_back(thread([this] { launch_req_thread(); }));
+//    threads.emplace_back(thread([this] { launch_rep_thread(); }));
 
-    cout << oslock << "All threads launched." << endl << osunlock;
+    // Detach threads
+    for(auto& t : threads) t.detach();
 
-    // Block until all threads exit
-    for(auto& t : threads) t.join();
+    // Pause to connect
+    this_thread::sleep_for(chrono::milliseconds(1000));
+
 }
 
 void Node::launch_pub_thread() {
@@ -47,9 +49,9 @@ void Node::launch_pub_thread() {
     cout << oslock << "Binding publish socket to [" << endpoint_pub << "]." << endl << osunlock;
 
     sock_pub.bind(endpoint_pub);
+    sock_pub.set(zmqpp::socket_option::send_timeout, 0);
 
-    // Pause to connect
-    this_thread::sleep_for(chrono::milliseconds(1000));
+
 
     while(!to_exit) {
     }
@@ -59,9 +61,22 @@ void Node::launch_sub_thread() {
 
     cout << oslock << "Connecting subscribe socket to [" << endpoint_sub << "]." << endl << osunlock;
 
+    // Subscribe to the default channel
+    sock_sub.subscribe("");
+
     sock_sub.connect(endpoint_sub);
 
     while(!to_exit) {
+
+        // Receive (blocking call)
+        zmqpp::message message;
+        sock_sub.receive(message);
+
+        // Read as a string
+        string text;
+        message >> text;
+
+        cout << oslock << "[RECV] " << text << endl << osunlock;
     }
 }
 
@@ -79,6 +94,15 @@ void Node::launch_rep_thread() {
 
     while(!to_exit) {
     }
+}
+
+void Node::publish(string msg) {
+
+    zmqpp::message message;
+    message << msg;
+    sock_pub.send(message);
+
+    cout << oslock << "[SEND] " << msg << endl << osunlock;
 }
 
 } // End namespace rnet

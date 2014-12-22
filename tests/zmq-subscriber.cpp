@@ -14,11 +14,11 @@ int main(int argc, char *argv[]) {
 
   // Create a subscriber socket
   zmqpp::context context;
-  zmqpp::socket_type type = zmqpp::socket_type::pair;
+  zmqpp::socket_type type = zmqpp::socket_type::subscribe;
   zmqpp::socket socket(context, type);
 
   // Subscribe to the default channel
-  //socket.subscribe("");
+  socket.subscribe("");
 
   // Connect to the publisher
   cout << "Connecting to " << PUBLISHER_ENDPOINT << "..." << endl;

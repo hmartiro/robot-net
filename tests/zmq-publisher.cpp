@@ -15,7 +15,7 @@ int main(int argc, char *argv[]) {
 
   // Create a publisher socket
   zmqpp::context context;
-  zmqpp::socket_type type = zmqpp::socket_type::pair;
+  zmqpp::socket_type type = zmqpp::socket_type::publish;
   zmqpp::socket socket (context, type);
 
   // Open the connection
